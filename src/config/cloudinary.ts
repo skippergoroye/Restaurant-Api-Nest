@@ -11,12 +11,25 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
+// const storage = new CloudinaryStorage({
+//   cloudinary,
+//   params: {
+//     folder: 'restaurants',
+//     allowed_formats: ['jpg', 'png', 'jpeg', 'csv', 'pdf'],
+//   } as any,
+// });
+
 const storage = new CloudinaryStorage({
-  cloudinary,
-  params: {
-    folder: 'restaurants',
-    allowed_formats: ['jpg', 'png', 'jpeg', 'csv', 'pdf'],
-  } as any,
+  cloudinary: cloudinary,
+  params: async (req, file) => {
+    // async code using `req` and `file`
+    // ...
+    return {
+      folder: 'restaurants',
+      allowed_formats: ['jpg', 'png', 'jpeg', 'csv', 'pdf'],
+      public_id: 'skipper_' + Date.now() + '_' + file.originalname,
+    };
+  },
 });
 
 export const multerConfig: MulterOptions = {
