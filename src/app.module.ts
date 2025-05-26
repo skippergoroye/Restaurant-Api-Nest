@@ -7,7 +7,8 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
 
 
 @Module({
-  imports: [ ConfigModule.forRoot({
+  imports: [ 
+    ConfigModule.forRoot({
     envFilePath: ".env",
     isGlobal: true
   }),

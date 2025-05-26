@@ -1,4 +1,4 @@
-import { IsEmail,  IsEnum, IsNotEmpty, IsPhoneNumber, IsString } from 'class-validator';
+import { IsEmail,  IsEnum, IsNotEmpty, IsOptional, IsPhoneNumber, IsString } from 'class-validator';
 import { Category } from '../schemas/restaurant.schema';
 
 export class createRestaurantDto {
@@ -27,4 +27,10 @@ export class createRestaurantDto {
   @IsNotEmpty()
   @IsEnum(Category)
   readonly category: Category;
+
+
+
+  @IsOptional()
+  readonly images: string[];
+  
 }

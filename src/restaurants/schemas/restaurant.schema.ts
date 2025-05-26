@@ -43,8 +43,8 @@ export class Restaurant {
 
 
 
-  @Prop()
-  images?: object[];
+  @Prop({ type: [String], default: [] })
+  images: string[];
 
   
 }

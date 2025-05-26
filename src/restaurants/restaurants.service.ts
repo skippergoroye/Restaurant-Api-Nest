@@ -84,4 +84,31 @@ export class RestaurantsService {
 
     return deletedRestaurant;
   }
+
+
+  // Upload images to Cloudinary and update restaurant
+  async uploadImages(id: string, files: Array<Express.Multer.File>): Promise<string[]> {
+    if (!files || files.length === 0) {
+      throw new BadRequestException('No files provided');
+    }
+
+    await this.findById(id); // Validate restaurant exists
+
+    // Image uploads are handled by multer-storage-cloudinary
+    const imageUrls = files.map((file) => file.path); // CloudinaryStorage adds 'path' with the secure URL
+
+    // Update the restaurant with the new image URLs
+    await this.restaurantModel.findByIdAndUpdate(
+      id,
+      { $push: { images: { $each: imageUrls } } },
+      { new: true },
+    );
+
+    return imageUrls;
+  }
+
+  // Validate MongoDB ObjectId
+  private isValidObjectId(id: string): boolean {
+    return mongoose.isValidObjectId(id);
+  }
 }

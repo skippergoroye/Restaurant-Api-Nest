@@ -25,4 +25,8 @@ export class updateRestaurantDto {
   @IsOptional()
   @IsEnum(Category, { message: 'Please Enter correct category' })
   readonly category: Category;
+
+
+  @IsOptional()
+    readonly images: string[];
 }

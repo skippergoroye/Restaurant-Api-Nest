@@ -17,6 +17,7 @@ import { RestaurantsService } from './restaurants.service';
 import { createRestaurantDto } from './dto/create-restaurant.dto';
 import { updateRestaurantDto } from './dto/update-restaurant.dto';
 import { FilesInterceptor } from '@nestjs/platform-express';
+import { multerConfig } from 'src/config/cloudinary';
 
 @Controller('restaurants')
 export class RestaurantsController {
@@ -69,13 +70,21 @@ export class RestaurantsController {
   //   }
 
   // multiple file upload
+  // @Put('upload/:id')
+  // @UseInterceptors(FilesInterceptor('files'))
+  // async uploadFiles(
+  //   @Param('id') id: string,
+  //   @UploadedFiles() files: Array<Express.Multer.File>,
+  // ) {
+  //   console.log(id);
+  //   console.log(files);
+  // }
+
+
   @Put('upload/:id')
-  @UseInterceptors(FilesInterceptor('files'))
-  async uploadFiles(
-    @Param('id') id: string,
-    @UploadedFiles() files: Array<Express.Multer.File>,
-  ) {
-    console.log(id);
-    console.log(files);
+  @UseInterceptors(FilesInterceptor('files', 10, multerConfig))
+  async uploadFiles(@Param('id') id: string, @UploadedFiles() files: Array<Express.Multer.File>) {
+    const imageUrls = await this.restaurantsService.uploadImages(id, files);
+    return { message: 'Images uploaded successfully', imageUrls };
   }
 }
