@@ -4,6 +4,7 @@ import { AppService } from './app.service';
 import { ConfigModule } from '@nestjs/config';
 import { MongooseModule } from '@nestjs/mongoose';
 import { RestaurantsModule } from './restaurants/restaurants.module';
+import { AuthModule } from './auth/auth.module';
 
 
 @Module({
@@ -12,7 +13,7 @@ import { RestaurantsModule } from './restaurants/restaurants.module';
     envFilePath: ".env",
     isGlobal: true
   }),
-  MongooseModule.forRoot(process.env.DB_URI || 'mongodb://localhost:27017/library-nest-api'),RestaurantsModule],
+  MongooseModule.forRoot(process.env.DB_URI || 'mongodb://localhost:27017/library-nest-api'),RestaurantsModule, AuthModule],
   controllers: [AppController],
   providers: [AppService],
 })
