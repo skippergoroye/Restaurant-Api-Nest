@@ -6,19 +6,19 @@ import { LoginDto } from './dto/login.dto';
 
 @Controller('auth')
 export class AuthController {
-    constructor( private authService:AuthService) {}
+  constructor(private authService: AuthService) {}
 
+  // Register User
+  @Post('signup')
+  async signUp(
+    @Body(new ValidationPipe()) signUpDto: SignUpDto,
+  ): Promise<User> {
+    return this.authService.signUp(signUpDto);
+  }
 
-    // Register User
-    @Post('signup')
-    async signUp(@Body(new ValidationPipe()) signUpDto: SignUpDto): Promise<User> {
-        return this.authService.signUp(signUpDto);
-    }
-
-
-    // Login User
-    @Post('login')
-    async login(@Body() loginDto: LoginDto): Promise<User> {
-        return this.authService.login(loginDto);
-    }
+  // Login User
+  @Post('login')
+  async login(@Body() loginDto: LoginDto): Promise<User> {
+    return this.authService.login(loginDto);
+  }
 }
