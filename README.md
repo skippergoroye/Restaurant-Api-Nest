@@ -5,3 +5,4 @@
 
 # Auth
 1. npm i @nestjs/jwt @nestjs/passport passport passport-jwt --save
+2. npm i bcryptjs --save
