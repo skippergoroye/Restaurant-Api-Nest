@@ -9,13 +9,18 @@ import * as bcrypt from 'bcryptjs';
 import { User } from './schema/user.schema';
 import { SignUpDto } from './dto/signup.dto';
 import { LoginDto } from './dto/login.dto';
+import { JwtService } from '@nestjs/jwt';
+import ApiFeatures from 'src/utils/apiFeatures.utils';
 
 @Injectable()
 export class AuthService {
-  constructor(@InjectModel(User.name) private userModel: Model<User>) {}
+  constructor(
+    @InjectModel(User.name) private userModel: Model<User>,
+    private jwtService: JwtService,
+  ) {}
 
   // Register User
-  async signUp(signUpDto: SignUpDto): Promise<User> {
+  async signUp(signUpDto: SignUpDto): Promise<{ token: string }> {
     const { name, email, password } = signUpDto;
 
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -26,8 +31,12 @@ export class AuthService {
         email,
         password: hashedPassword,
       });
+      const token = await ApiFeatures.assignJwtToken(
+        user._id as string,
+        this.jwtService,
+      );
 
-      return user;
+      return { token };
     } catch (error) {
       if (error.code === 11000) {
         const duplicateField = Object.keys(error.keyValue)[0];
@@ -42,7 +51,7 @@ export class AuthService {
   }
 
   // Login User
-  async login(loginDto: LoginDto): Promise<User> {
+  async login(loginDto: LoginDto): Promise<{ token: string }> {
     const { email, password } = loginDto;
 
     const user = await this.userModel.findOne({ email }).select('+password');
@@ -58,6 +67,11 @@ export class AuthService {
       throw new UnauthorizedException('Invalid email or password');
     }
 
-    return user;
+    const token = await ApiFeatures.assignJwtToken(
+      user._id as string,
+      this.jwtService,
+    );
+
+    return { token };
   }
 }
